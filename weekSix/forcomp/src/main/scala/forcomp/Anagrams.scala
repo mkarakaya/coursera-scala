@@ -91,10 +91,20 @@ object Anagrams {
    *  in the example above could have been displayed in some other order.
    */
   def combinations(occurrences: Occurrences): List[Occurrences] =
-    occurrences match {
-      case Nil => List(Nil)
-      case occ => dictionaryByOccurrences(occ).map(w => wordOccurrences(w))
+    (occurrences foldRight List[Occurrences](Nil)) {
+      case ((char,times), tail) => {
+        val combined = for {
+          forTail <- tail
+          n <- 1 to times
+        }
+          yield (char, n) :: forTail
+
+        combined ++ tail
+      }
     }
+
+
+
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
    *
@@ -149,5 +159,5 @@ object Anagrams {
    *
    *  Note: There is only one anagram of an empty sentence.
    */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] = List(Nil)
 }
